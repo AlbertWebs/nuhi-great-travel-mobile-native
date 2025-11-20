@@ -3,7 +3,7 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { useNavigate } from 'react-router-dom'
 import { FaArrowLeft, FaCalendarAlt, FaMapMarkerAlt, FaUser, FaEnvelope, FaPhone, FaCheck, FaCreditCard, FaClock } from 'react-icons/fa'
 import { useBooking } from '../context/BookingContext'
-import { calculatePrice, createBooking } from '../services/api'
+import { calculatePrice, createBooking, sendPaymentEmail } from '../services/api'
 import { format, addDays } from 'date-fns'
 
 const BookingFlow = () => {
@@ -107,9 +107,24 @@ const BookingFlow = () => {
 
       const response = await createBooking(bookingPayload)
       
-      // If pay now and payment URL is provided, redirect to payment
-      if (formData.paymentPreference === 'pay_now' && response.data.payment_url) {
-        window.location.href = response.data.payment_url
+      // If pay now, send payment email and navigate to payment page
+      if (formData.paymentPreference === 'pay_now') {
+        try {
+          // Send payment email with payment details and link
+          await sendPaymentEmail(response.data.id)
+          console.log('Payment email sent successfully')
+        } catch (emailError) {
+          console.error('Error sending payment email:', emailError)
+          // Continue even if email fails - don't block the user
+        }
+        
+        // Navigate to Pesapal payment page
+        if (response.data.payment_url) {
+          navigate(`/payment/pesapal?booking_id=${response.data.id}&payment_url=${encodeURIComponent(response.data.payment_url)}`)
+        } else {
+          // If no payment URL, still navigate to payment page with booking ID
+          navigate(`/payment/pesapal?booking_id=${response.data.id}`)
+        }
         return
       }
       
@@ -218,7 +233,7 @@ const BookingFlow = () => {
               <div className="price-preview">
                 <div className="price-info">
                   <span>{bookingData.days} {bookingData.days === 1 ? 'day' : 'days'}</span>
-                  <span className="price">${typeof bookingData.totalPrice === 'number' 
+                  <span className="price">KES {typeof bookingData.totalPrice === 'number' 
                     ? bookingData.totalPrice.toFixed(2) 
                     : parseFloat(bookingData.totalPrice || 0).toFixed(2)}</span>
                 </div>
@@ -364,7 +379,7 @@ const BookingFlow = () => {
                   </div>
                   <div className="review-total">
                     <span>Total</span>
-                    <span className="total-price">${typeof bookingData.totalPrice === 'number' 
+                    <span className="total-price">KES {typeof bookingData.totalPrice === 'number' 
                       ? bookingData.totalPrice.toFixed(2) 
                       : parseFloat(bookingData.totalPrice || 0).toFixed(2)}</span>
                   </div>

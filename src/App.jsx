@@ -6,6 +6,7 @@ import CarsList from './pages/CarsList'
 import FleetDetail from './pages/FleetDetail'
 import BookingFlow from './pages/BookingFlow'
 import BookingSuccess from './pages/BookingSuccess'
+import PesapalPayment from './pages/PesapalPayment'
 import Login from './pages/Login'
 import Register from './pages/Register'
 import Profile from './pages/Profile'
@@ -47,6 +48,7 @@ function AppRoutes() {
             <Route path="/fleets/:id" element={<FleetDetail />} />
             <Route path="/booking" element={<BookingFlow />} />
             <Route path="/booking/success" element={<BookingSuccess />} />
+            <Route path="/payment/pesapal" element={<PesapalPayment />} />
             
             {/* Auth Routes */}
             <Route path="/login" element={<Login />} />

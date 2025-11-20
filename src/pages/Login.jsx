@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect, useRef } from 'react'
 import { motion } from 'framer-motion'
 import { useNavigate, Link } from 'react-router-dom'
 import { FaEnvelope, FaLock, FaArrowLeft, FaGoogle } from 'react-icons/fa'
@@ -11,6 +11,7 @@ const Login = () => {
   const [formData, setFormData] = useState({ email: '', password: '' })
   const [loading, setLoading] = useState(false)
   const [error, setError] = useState('')
+  const googleButtonRef = useRef(null)
 
   const handleSubmit = async (e) => {
     e.preventDefault()
@@ -28,23 +29,93 @@ const Login = () => {
     setLoading(false)
   }
 
+  // Initialize Google Sign-In when component mounts
+  useEffect(() => {
+    const initGoogleSignIn = () => {
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+      
+      if (!clientId || !window.google) {
+        return
+      }
+
+      try {
+        window.google.accounts.id.initialize({
+          client_id: clientId,
+          callback: handleGoogleCallback,
+        })
+
+        // Render button if ref is available
+        if (googleButtonRef.current) {
+          window.google.accounts.id.renderButton(googleButtonRef.current, {
+            type: 'standard',
+            theme: 'outline',
+            size: 'large',
+            text: 'signin_with',
+            width: '100%',
+          })
+        }
+      } catch (error) {
+        console.error('Error initializing Google Sign-In:', error)
+      }
+    }
+
+    // Wait for Google library to load
+    if (window.google) {
+      initGoogleSignIn()
+    } else {
+      const checkGoogle = setInterval(() => {
+        if (window.google) {
+          clearInterval(checkGoogle)
+          initGoogleSignIn()
+        }
+      }, 100)
+
+      // Cleanup after 10 seconds
+      setTimeout(() => clearInterval(checkGoogle), 10000)
+    }
+  }, [])
+
   const handleGoogleLogin = async () => {
     try {
       setError('')
       setLoading(true)
 
-      // Initialize Google Sign-In
-      if (window.google) {
-        window.google.accounts.id.initialize({
-          client_id: import.meta.env.VITE_GOOGLE_CLIENT_ID || '',
-          callback: handleGoogleCallback,
-        })
-        window.google.accounts.id.prompt()
-      } else {
-        // Fallback: Use popup
-        const authUrl = `https://accounts.google.com/o/oauth2/v2/auth?client_id=${import.meta.env.VITE_GOOGLE_CLIENT_ID}&redirect_uri=${encodeURIComponent(window.location.origin)}&response_type=code&scope=email profile`
-        window.location.href = authUrl
+      const clientId = import.meta.env.VITE_GOOGLE_CLIENT_ID
+      
+      if (!clientId) {
+        setError('Google Sign-In is not configured. Please contact support.')
+        setLoading(false)
+        return
       }
+
+      // Wait for Google Sign-In library to load
+      let retries = 0
+      const maxRetries = 15
+      
+      while (!window.google && retries < maxRetries) {
+        await new Promise(resolve => setTimeout(resolve, 200))
+        retries++
+      }
+
+      if (!window.google || !window.google.accounts) {
+        setError('Google Sign-In library failed to load. Please refresh the page and try again.')
+        setLoading(false)
+        return
+      }
+
+      // Initialize and prompt
+      window.google.accounts.id.initialize({
+        client_id: clientId,
+        callback: handleGoogleCallback,
+      })
+
+      // Try to show oneTap, if not available, show button
+      window.google.accounts.id.prompt((notification) => {
+        if (notification.isNotDisplayed() || notification.isSkippedMoment()) {
+          // If oneTap doesn't work, the button will handle it
+          setLoading(false)
+        }
+      })
     } catch (error) {
       console.error('Google login error:', error)
       setError('Google login failed. Please try again.')
@@ -153,14 +224,19 @@ const Login = () => {
           <span>OR</span>
         </div>
 
-        <button
-          onClick={handleGoogleLogin}
-          className="btn btn-google"
-          disabled={loading}
-          style={{ width: '100%', marginTop: '20px' }}
-        >
-          <FaGoogle /> Continue with Google
-        </button>
+        <div style={{ width: '100%', marginTop: '20px' }}>
+          <div ref={googleButtonRef} style={{ width: '100%', display: 'flex', justifyContent: 'center' }}></div>
+          {!window.google && (
+            <button
+              onClick={handleGoogleLogin}
+              className="btn btn-google"
+              disabled={loading}
+              style={{ width: '100%' }}
+            >
+              <FaGoogle /> Continue with Google
+            </button>
+          )}
+        </div>
 
         <p className="auth-footer">
           Don't have an account?{' '}

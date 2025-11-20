@@ -126,7 +126,7 @@ const MyBookings = () => {
               {booking.total_price && (
                 <div className="booking-footer-card">
                   <span>Total</span>
-                  <span className="booking-price">${typeof booking.total_price === 'number' 
+                  <span className="booking-price">KES {typeof booking.total_price === 'number' 
                     ? booking.total_price.toFixed(2) 
                     : parseFloat(booking.total_price || 0).toFixed(2)}</span>
                 </div>
