@@ -205,22 +205,25 @@ const EditProfile = () => {
         }
 
         .edit-header {
-          background: var(--surface);
-          border-bottom: 1px solid var(--border);
-          padding: 12px 20px;
+          background: linear-gradient(180deg, rgba(0, 0, 0, 0.95) 0%, rgba(0, 0, 0, 0.9) 100%);
+          backdrop-filter: blur(20px);
+          border-bottom: 2px solid rgba(255, 215, 0, 0.2);
+          padding: 16px 20px;
           display: flex;
           align-items: center;
           justify-content: space-between;
-          box-shadow: var(--shadow);
+          box-shadow: 0 4px 20px rgba(0, 0, 0, 0.5), 0 0 0 1px rgba(255, 215, 0, 0.1);
           position: sticky;
           top: 0;
           z-index: 10;
         }
 
         .edit-header h1 {
-          font-size: 20px;
-          font-weight: 700;
+          font-size: 22px;
+          font-weight: 800;
           color: var(--text);
+          letter-spacing: -0.3px;
+          text-shadow: 0 0 20px rgba(255, 215, 0, 0.3);
         }
 
         .edit-header .back-btn {
@@ -228,42 +231,68 @@ const EditProfile = () => {
         }
 
         .edit-content {
-          padding: 20px;
-          max-width: 500px;
+          padding: 24px 20px;
+          max-width: 520px;
           margin: 0 auto;
         }
 
         .form-group {
-          margin-bottom: 20px;
+          margin-bottom: 24px;
         }
 
         .form-group label {
           display: flex;
           align-items: center;
-          gap: 8px;
+          gap: 10px;
           font-weight: 600;
-          margin-bottom: 8px;
+          margin-bottom: 10px;
           color: var(--text);
+          font-size: 14px;
+        }
+
+        .form-group label svg {
+          color: var(--primary);
+          font-size: 16px;
+        }
+
+        .input {
+          width: 100%;
+          padding: 14px 16px;
+          background: var(--surface);
+          border: 2px solid var(--border);
+          border-radius: 14px;
+          color: var(--text);
+          font-size: 16px;
+          transition: all 0.3s ease;
+          box-shadow: 0 2px 10px rgba(0, 0, 0, 0.2);
+        }
+
+        .input:focus {
+          outline: none;
+          border-color: var(--primary);
+          box-shadow: 0 0 0 3px rgba(255, 215, 0, 0.1), 0 4px 20px rgba(255, 215, 0, 0.2);
         }
 
         .error-message {
           background: rgba(255, 68, 68, 0.15);
-          border: 1px solid var(--error);
+          border: 2px solid var(--error);
           color: var(--error);
-          padding: 12px 16px;
-          border-radius: 12px;
-          margin-bottom: 20px;
+          padding: 14px 16px;
+          border-radius: 14px;
+          margin-bottom: 24px;
           font-size: 14px;
+          backdrop-filter: blur(10px);
         }
 
         .success-message {
           background: rgba(16, 185, 129, 0.15);
-          border: 1px solid var(--success);
+          border: 2px solid var(--success);
           color: var(--success);
-          padding: 12px 16px;
-          border-radius: 12px;
-          margin-bottom: 20px;
+          padding: 14px 16px;
+          border-radius: 14px;
+          margin-bottom: 24px;
           font-size: 14px;
+          backdrop-filter: blur(10px);
         }
       `}</style>
     </div>

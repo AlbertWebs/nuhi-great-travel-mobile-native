@@ -124,6 +124,16 @@ export const createBooking = async (bookingData) => {
   return response.data
 }
 
+export const sendPaymentEmail = async (bookingId) => {
+  const response = await api.post(`/bookings/${bookingId}/send-payment-email`)
+  return response.data
+}
+
+export const generatePaymentUrl = async (bookingId) => {
+  const response = await api.post(`/bookings/${bookingId}/generate-payment-url`)
+  return response.data
+}
+
 export const getBooking = async (id) => {
   const response = await api.get(`/bookings/${id}`)
   return response.data

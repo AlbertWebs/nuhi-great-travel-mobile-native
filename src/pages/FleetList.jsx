@@ -118,9 +118,24 @@ const FleetList = () => {
 
       {/* Fleet Grid */}
       {loading ? (
-        <div className="loading-container">
-          <div className="spinner"></div>
-          <p>Loading vehicles...</p>
+        <div className="fleets-section">
+          <h2 className="section-title">
+            {selectedCar
+              ? `${cars.find((c) => c.id === selectedCar)?.make || 'Category'} Vehicles`
+              : 'All Vehicles'}
+          </h2>
+          <div className="fleet-grid">
+            {[...Array(6)].map((_, index) => (
+              <div key={index} className="fleet-card-skeleton">
+                <div className="fleet-card-image-skeleton"></div>
+                <div className="fleet-card-content-skeleton">
+                  <div className="skeleton-line title"></div>
+                  <div className="skeleton-line specs"></div>
+                  <div className="skeleton-line price"></div>
+                </div>
+              </div>
+            ))}
+          </div>
         </div>
       ) : fleets.length === 0 ? (
         <div className="empty-state">
@@ -157,7 +172,7 @@ const FleetList = () => {
                   {fleet.fuel_type && <span>⛽ {fleet.fuel_type}</span>}
                 </div>
                 <div className="fleet-price">
-                  <span className="price-amount">${typeof fleet.price_per_day === 'number' 
+                  <span className="price-amount">KES {typeof fleet.price_per_day === 'number' 
                     ? fleet.price_per_day.toFixed(2) 
                     : parseFloat(fleet.price_per_day || 0).toFixed(2)}</span>
                   <span className="price-unit">/day</span>
@@ -386,6 +401,69 @@ const FleetList = () => {
         .price-unit {
           font-size: 14px;
           color: var(--text-light);
+        }
+
+        /* Loading Skeletons */
+        .fleet-card-skeleton {
+          background: var(--surface);
+          border: 1px solid var(--border);
+          border-radius: 16px;
+          overflow: hidden;
+          box-shadow: var(--shadow);
+          display: flex;
+          flex-direction: column;
+        }
+
+        .fleet-card-image-skeleton {
+          width: 100%;
+          height: 200px;
+          background: linear-gradient(90deg, 
+            rgba(255, 255, 255, 0.05) 0%, 
+            rgba(255, 215, 0, 0.1) 50%, 
+            rgba(255, 255, 255, 0.05) 100%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+        }
+
+        .fleet-card-content-skeleton {
+          padding: 16px;
+          display: flex;
+          flex-direction: column;
+          gap: 12px;
+        }
+
+        .skeleton-line {
+          height: 16px;
+          border-radius: 8px;
+          background: linear-gradient(90deg, 
+            rgba(255, 255, 255, 0.05) 0%, 
+            rgba(255, 215, 0, 0.1) 50%, 
+            rgba(255, 255, 255, 0.05) 100%);
+          background-size: 200% 100%;
+          animation: shimmer 1.5s infinite;
+        }
+
+        .skeleton-line.title {
+          width: 80%;
+          height: 20px;
+        }
+
+        .skeleton-line.specs {
+          width: 60%;
+        }
+
+        .skeleton-line.price {
+          width: 50%;
+          height: 22px;
+        }
+
+        @keyframes shimmer {
+          0% {
+            background-position: -200% 0;
+          }
+          100% {
+            background-position: 200% 0;
+          }
         }
 
         @media (max-width: 768px) {

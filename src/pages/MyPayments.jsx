@@ -87,7 +87,7 @@ const MyPayments = () => {
 
               <div className="payment-footer-card">
                 <span>Amount Paid</span>
-                <span className="payment-amount">${payment.amount.toFixed(2)}</span>
+                <span className="payment-amount">KES {payment.amount.toFixed(2)}</span>
               </div>
             </motion.div>
           ))}

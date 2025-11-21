@@ -121,7 +121,7 @@ const MyInvoices = () => {
 
               <div className="invoice-footer-card">
                 <span>Total Amount</span>
-                <span className="invoice-price">${typeof invoice.total_price === 'number' 
+                <span className="invoice-price">KES {typeof invoice.total_price === 'number' 
                   ? invoice.total_price.toFixed(2) 
                   : parseFloat(invoice.total_price || 0).toFixed(2)}</span>
               </div>

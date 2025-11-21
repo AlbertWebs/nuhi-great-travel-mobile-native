@@ -91,8 +91,8 @@ const LoyaltyPoints = () => {
               />
             </div>
             <div className="progress-footer">
-              <span>${loyaltyData.total_spent.toFixed(2)} spent</span>
-              <span>${loyaltyData.next_reward_at.toFixed(2)} to next point</span>
+              <span>KES {loyaltyData.total_spent.toFixed(2)} spent</span>
+              <span>KES {loyaltyData.next_reward_at.toFixed(2)} to next point</span>
             </div>
           </motion.div>
 
@@ -106,7 +106,7 @@ const LoyaltyPoints = () => {
             >
               <FaDollarSign size={24} />
               <div className="stat-content">
-                <div className="stat-value">${loyaltyData.total_spent.toFixed(2)}</div>
+                <div className="stat-value">KES {loyaltyData.total_spent.toFixed(2)}</div>
                 <div className="stat-label">Total Spent</div>
               </div>
             </motion.div>
@@ -145,7 +145,7 @@ const LoyaltyPoints = () => {
           >
             <h3>How It Works</h3>
             <ul className="info-list">
-              <li>Earn 1 point for every $10 spent</li>
+              <li>Earn 1 point for every KES 1,000 spent</li>
               <li>Points never expire</li>
               <li>Redeem points for discounts on future bookings</li>
               <li>Complete bookings to earn bonus points</li>
