@@ -5,12 +5,22 @@
   RewriteEngine On
   RewriteBase /
   
-  # Don't rewrite files or directories
-  RewriteCond %{REQUEST_FILENAME} !-f
-  RewriteCond %{REQUEST_FILENAME} !-d
+  # Skip rewriting if the file or directory exists
+  RewriteCond %{REQUEST_FILENAME} -f [OR]
+  RewriteCond %{REQUEST_FILENAME} -d
+  RewriteRule ^ - [L]
   
-  # Rewrite everything else to index.html to allow client-side routing
-  RewriteRule . /index.html [L]
+  # Skip rewriting for static assets (explicitly exclude from SPA routing)
+  RewriteCond %{REQUEST_URI} \.(js|mjs|css|png|jpg|jpeg|gif|ico|svg|woff|woff2|ttf|eot|json|webmanifest|xml|txt)$ [NC,OR]
+  RewriteCond %{REQUEST_URI} ^/assets/ [NC]
+  RewriteRule ^ - [L]
+  
+  # Skip rewriting for service worker and manifest files
+  RewriteCond %{REQUEST_URI} ^/(sw\.js|registerSW\.js|workbox-.*\.js|manifest\.json|manifest\.webmanifest)$ [NC]
+  RewriteRule ^ - [L]
+  
+  # Rewrite everything else to index.html for client-side routing
+  RewriteRule ^ /index.html [L]
 </IfModule>
 
 # Enable compression for better performance
