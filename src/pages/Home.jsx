@@ -204,7 +204,7 @@ const Home = () => {
             <FaCalendarAlt />
           </div>
           <h3>Quick Book</h3>
-          <p>Start booking now</p>
+          <p>Schedule your booking</p>
         </motion.div>
         <motion.div
           whileHover={{ scale: 1.05, y: -5 }}
